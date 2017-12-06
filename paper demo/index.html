@@ -1,0 +1,796 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>paper demo</title>
+    <style>
+        body, dl, dd, h1, h2, h3, h4, h5, h6, p, form, pre {margin:0;}
+        ol, ul{margin:0; padding:0;}
+        a, button, input {outline: none;}
+        body {font-size: 15px;font-family: "Lantinghei SC", "Open Sans", Arial, "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;}
+        html, body {height:100%;}
+        ul, li {list-style: none;}
+        table {border-collapse: collapse;border-spacing: 0;}
+        a {outline:none;text-decoration:none;color:#333;-webkit-tap-highlight-color: transparent;}
+        * {box-sizing: border-box;}
+        input, textarea, keygen, select, button {font-family: inherit;font-size: inherit;}
+
+        .bggray{background-color: #eee}
+        .bgfff {background-color: #fff}
+
+        .nowrap {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .line {
+            display: block;
+            height:0;
+            border-top:1px solid;
+            padding:0;
+            margin:10px 0;
+        }
+
+        .textright {text-align: right}
+        .textcenter {text-align: center}
+
+        .middle {vertical-align: middle}
+
+        .left{float:left}
+        .right{float:right}
+        .overhide {overflow: hidden}
+
+		.c555 {color:#555}
+        .red {color:#c00}
+        .gray {color:#aaa}
+        .green {color:#03c765}
+        .c555 {color:#555}
+        .c333 {color:#333}
+
+        .trans-panel-v {
+            transform: scaleY(1);
+            transform-origin: 0% 100%;
+            -webkit-transform: scaleY(1);
+            -webkit-transform-origin: 0% 100%;
+            transition: transform .16s ease, -webkit-transform .16s ease;
+        }
+        .trans-panel-v.off {
+            transform: scaleY(0);
+            -webkit-transform: scaleY(0);
+        }
+
+        .textdel {text-decoration: line-through;}
+
+        .container {
+            max-width: 430px;
+            margin:0 auto;
+            min-height: 100%;
+        }
+
+        .no-scroll-bar::-webkit-scrollbar {
+            width:0;
+            height:0;
+        }
+
+        .access:active {background-color: #fbfcfd !important;}
+
+        .loadimg-default {background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXY3j37t1/AAliA8r60tGjAAAAAElFTkSuQmCC) no-repeat center / cover;}
+
+
+        @keyframes weuiLoading{0%{-webkit-transform:rotate3d(0,0,1,0deg)}100%{-webkit-transform:rotate3d(0,0,1,360deg)}}
+        .weui-loading {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+            animation: weuiLoading 1s steps(12,end) infinite;
+            background: transparent url(data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iciIgd2lkdGg9JzEyMHB4JyBoZWlnaHQ9JzEyMHB4JyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSJub25lIiBjbGFzcz0iYmsiPjwvcmVjdD4KICAgIDxyZWN0IHg9JzQ2LjUnIHk9JzQwJyB3aWR0aD0nNycgaGVpZ2h0PScyMCcgcng9JzUnIHJ5PSc1JyBmaWxsPScjRTlFOUU5JwogICAgICAgICAgdHJhbnNmb3JtPSdyb3RhdGUoMCA1MCA1MCkgdHJhbnNsYXRlKDAgLTMwKSc+CiAgICA8L3JlY3Q+CiAgICA8cmVjdCB4PSc0Ni41JyB5PSc0MCcgd2lkdGg9JzcnIGhlaWdodD0nMjAnIHJ4PSc1JyByeT0nNScgZmlsbD0nIzk4OTY5NycKICAgICAgICAgIHRyYW5zZm9ybT0ncm90YXRlKDMwIDUwIDUwKSB0cmFuc2xhdGUoMCAtMzApJz4KICAgICAgICAgICAgICAgICByZXBlYXRDb3VudD0naW5kZWZpbml0ZScvPgogICAgPC9yZWN0PgogICAgPHJlY3QgeD0nNDYuNScgeT0nNDAnIHdpZHRoPSc3JyBoZWlnaHQ9JzIwJyByeD0nNScgcnk9JzUnIGZpbGw9JyM5Qjk5OUEnCiAgICAgICAgICB0cmFuc2Zvcm09J3JvdGF0ZSg2MCA1MCA1MCkgdHJhbnNsYXRlKDAgLTMwKSc+CiAgICAgICAgICAgICAgICAgcmVwZWF0Q291bnQ9J2luZGVmaW5pdGUnLz4KICAgIDwvcmVjdD4KICAgIDxyZWN0IHg9JzQ2LjUnIHk9JzQwJyB3aWR0aD0nNycgaGVpZ2h0PScyMCcgcng9JzUnIHJ5PSc1JyBmaWxsPScjQTNBMUEyJwogICAgICAgICAgdHJhbnNmb3JtPSdyb3RhdGUoOTAgNTAgNTApIHRyYW5zbGF0ZSgwIC0zMCknPgogICAgPC9yZWN0PgogICAgPHJlY3QgeD0nNDYuNScgeT0nNDAnIHdpZHRoPSc3JyBoZWlnaHQ9JzIwJyByeD0nNScgcnk9JzUnIGZpbGw9JyNBQkE5QUEnCiAgICAgICAgICB0cmFuc2Zvcm09J3JvdGF0ZSgxMjAgNTAgNTApIHRyYW5zbGF0ZSgwIC0zMCknPgogICAgPC9yZWN0PgogICAgPHJlY3QgeD0nNDYuNScgeT0nNDAnIHdpZHRoPSc3JyBoZWlnaHQ9JzIwJyByeD0nNScgcnk9JzUnIGZpbGw9JyNCMkIyQjInCiAgICAgICAgICB0cmFuc2Zvcm09J3JvdGF0ZSgxNTAgNTAgNTApIHRyYW5zbGF0ZSgwIC0zMCknPgogICAgPC9yZWN0PgogICAgPHJlY3QgeD0nNDYuNScgeT0nNDAnIHdpZHRoPSc3JyBoZWlnaHQ9JzIwJyByeD0nNScgcnk9JzUnIGZpbGw9JyNCQUI4QjknCiAgICAgICAgICB0cmFuc2Zvcm09J3JvdGF0ZSgxODAgNTAgNTApIHRyYW5zbGF0ZSgwIC0zMCknPgogICAgPC9yZWN0PgogICAgPHJlY3QgeD0nNDYuNScgeT0nNDAnIHdpZHRoPSc3JyBoZWlnaHQ9JzIwJyByeD0nNScgcnk9JzUnIGZpbGw9JyNDMkMwQzEnCiAgICAgICAgICB0cmFuc2Zvcm09J3JvdGF0ZSgyMTAgNTAgNTApIHRyYW5zbGF0ZSgwIC0zMCknPgogICAgPC9yZWN0PgogICAgPHJlY3QgeD0nNDYuNScgeT0nNDAnIHdpZHRoPSc3JyBoZWlnaHQ9JzIwJyByeD0nNScgcnk9JzUnIGZpbGw9JyNDQkNCQ0InCiAgICAgICAgICB0cmFuc2Zvcm09J3JvdGF0ZSgyNDAgNTAgNTApIHRyYW5zbGF0ZSgwIC0zMCknPgogICAgPC9yZWN0PgogICAgPHJlY3QgeD0nNDYuNScgeT0nNDAnIHdpZHRoPSc3JyBoZWlnaHQ9JzIwJyByeD0nNScgcnk9JzUnIGZpbGw9JyNEMkQyRDInCiAgICAgICAgICB0cmFuc2Zvcm09J3JvdGF0ZSgyNzAgNTAgNTApIHRyYW5zbGF0ZSgwIC0zMCknPgogICAgPC9yZWN0PgogICAgPHJlY3QgeD0nNDYuNScgeT0nNDAnIHdpZHRoPSc3JyBoZWlnaHQ9JzIwJyByeD0nNScgcnk9JzUnIGZpbGw9JyNEQURBREEnCiAgICAgICAgICB0cmFuc2Zvcm09J3JvdGF0ZSgzMDAgNTAgNTApIHRyYW5zbGF0ZSgwIC0zMCknPgogICAgPC9yZWN0PgogICAgPHJlY3QgeD0nNDYuNScgeT0nNDAnIHdpZHRoPSc3JyBoZWlnaHQ9JzIwJyByeD0nNScgcnk9JzUnIGZpbGw9JyNFMkUyRTInCiAgICAgICAgICB0cmFuc2Zvcm09J3JvdGF0ZSgzMzAgNTAgNTApIHRyYW5zbGF0ZSgwIC0zMCknPgogICAgPC9yZWN0Pgo8L3N2Zz4=) no-repeat;
+            background-size: 100%;
+        }
+    </style>
+</head>
+<body class="bggray">
+<link rel="stylesheet" href="photoSwipe/photoswipe.min.css">
+<link rel="stylesheet" href="photoSwipe/default-skin.min.css">
+<style>
+    .article-list {
+        position: relative;
+        overflow: hidden;
+    }
+    .article-list article {
+        position: relative;
+    }
+    .article-list .loading {
+        float: left;
+        width: 100%;
+    }
+    .article-list .arc-item {
+        width:50%;
+        float:left;
+    }
+    .article-list .arc-item:first-child {
+        width:100%;
+        background-color: #fff;
+    }
+
+    .article-list article > a {
+        padding:15px;
+        display: block;
+        overflow: hidden;
+        position: relative;
+    }
+    .article-list .arc-item > a {
+        /*height:170px;*/
+        padding: 13px 12px;
+    }
+    .article-list .arc-item:first-child > a {
+        /*height:160px;*/
+    }
+    .article-list article .multi {
+        height:auto;
+        max-height: none;
+    }
+    .article-list .arc-item .pic {
+        width: 100%;
+        height: 60vw;
+        max-width: 100%;
+        max-height: 258px;
+        /*margin: 0 auto;*/
+    }
+    .article-list .arc-item:first-child .pic {
+        float:left;
+        margin-right:15px;
+        width: 44vw;
+        max-width:189px;
+    }
+    .article-list article .pic div {
+        height:100%;
+    }
+    .article-list article .multi .pic-list {
+        overflow: hidden;
+        margin-bottom: 22px;
+        margin-top: 7px;
+    }
+    .article-list article .multi .pic-list .pic-item {
+        width:32%;
+        height:75px;
+        height:20vw;
+        float:left;
+        margin-right: 2%;
+    }
+    .article-list article .multi .pic-list .pic-item:last-child {
+        margin-right:0;
+    }
+    .article-list article .multi .pic-list .pic-item .loadimg-default {
+        width:100%;
+        height:100%;
+    }
+    .article-list .arc-item .desc {
+        overflow: hidden;
+        position:relative;
+        height:100%;
+        padding-right: 20px;
+    }
+    .article-list .arc-item:first-child .desc {
+        text-align: center;
+        height: 60vw;
+        max-height: 258px;
+        padding-right: 0;
+    }
+    .article-list article .zero .desc, .article-list article .multi .desc {
+        margin-right: 0;
+    }
+    .article-list article .desc .arc-title {
+        line-height: 1.2em;
+        font-weight: 300;
+        font-size: 14px;
+        letter-spacing: 0.05em;
+        margin:5px 0;
+    }
+    .article-list article .desc time {
+        font-size: 14px;
+    }
+    .article-list article .desc .arc-discription {
+        height:30px;
+		font-size:14px;
+		font-weight:300;
+		color:#777;
+    }
+    .article-list article .desc .arc-btn {
+        display: inline-block;
+        border:1px solid #999;
+        line-height: 30px;
+        border-radius: 3px;
+        min-width: 80px;
+    }
+    .article-list .arc-item:first-child .desc .btn-cell {
+        position:absolute;
+        bottom:25px;
+        width:100%;
+        left:0;
+        background-color: #fff;
+    }
+    .article-list .arc-item .desc .ico-cell {
+        position:absolute;
+        right:0;
+        top:6px;
+    }
+    .article-list .arc-item:first-child .desc .ico-cell {
+        top:auto;
+        bottom:0;
+        right:auto;
+        left:0;
+    }
+    .article-list .arc-item .first-item {
+        display: none;
+    }
+    .article-list .arc-item:first-child .first-item {
+        display: block;
+    }
+
+    /* swiper */
+    .swiper-container {
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    .swiper-container-free-mode>.swiper-wrapper {
+        -webkit-transition-timing-function: ease-out;
+        -moz-transition-timing-function: ease-out;
+        -ms-transition-timing-function: ease-out;
+        -o-transition-timing-function: ease-out;
+        transition-timing-function: ease-out;
+        margin: 0 auto;
+    }
+    .swiper-container-android .swiper-slide, .swiper-wrapper {
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -o-transform: translate(0,0);
+        -ms-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+    }
+    .swiper-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-transition-property: -webkit-transform;
+        -moz-transition-property: -moz-transform;
+        -o-transition-property: -o-transform;
+        -ms-transition-property: -ms-transform;
+        transition-property: transform;
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+    }
+    .swiper-slide {
+        -webkit-flex-shrink: 0;
+        -ms-flex: 0 0 auto;
+        flex-shrink: 0;
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    /* swiper end */
+
+    .pswp__top-bar {
+        position:static;
+		background-color:#333;
+    }
+    .pswp__bottom-bar {
+        background-color: #333;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 44px;
+        width: 100%;
+    }
+    .pswp__counter {
+        top:auto;
+        bottom: 0;
+        font-size: 14px;
+        opacity: .9;
+    }
+    .pswp__button--close {
+        float:left;
+        opacity: .85;
+        background-image: none !important;
+    }
+    .pswp__button--close:after {
+        content: " ";
+        display: inline-block;
+        height: 10px;
+        width: 10px;
+        border-width: 0 0 2px 2px;
+        border-color: #ffffff;
+        border-style: solid;
+        -webkit-transform: matrix(.71,.71,-.71,.71,0,0);
+        transform: matrix(.71,.71,-.71,.71,0,0);
+        position: absolute;
+        top: 50%;
+        right: 13px;
+        margin-top: -6px;
+    }
+    .pswp_t_title {
+        position: absolute;
+        top: 0;
+        left: 18%;
+        right: 0;
+        display: block;
+        width: 64%;
+        color: #fff;
+        text-align: center;
+        line-height: 44px;
+        height: 44px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .pswp .pswp__bottom-index {
+        position: fixed;
+        z-index: 2000;
+        bottom: 44px;
+        left: 0;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        opacity: .001 !important;
+    }
+    .pswp--open .pswp__bottom-index {
+        opacity: 1 !important;
+    }
+    .pswp .pswp__bottom-index .index-pic-item {
+        width:auto;
+    }
+    .pswp .pswp__bottom-index .index-pic-item p {
+        color: #fff;
+        text-align: center;
+        margin-bottom: 7px;
+        line-height: 1.2em;
+    }
+    .pswp .pswp__bottom-index .index-pic-item img {
+        width:auto;
+        height:100px;
+    }
+    .pswp .pswp__bottom-index .index-pic-item.on img {
+        box-shadow: 0 0 0 5px rgba(23, 255, 248, 0.78);
+    }
+    .pswp__ui--hidden .pswp__bottom-bar {
+        opacity: .001;
+    }
+
+    .pswp__button--index {
+        background:url(image/index.png) no-repeat center / 44px !important;
+        opacity: 0.9;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    .ico-tag {
+        font-size: 0;
+    }
+    .ico-tag:before {
+        content:'';
+        display: inline-block;
+        width:0;
+        height:0;
+        border-top: 10px solid;
+        border-left: 6px solid;
+        border-right: 6px solid;
+        border-bottom: 4px solid transparent;
+    }
+	
+</style>
+<div class="container">
+
+    <div class="panel">
+        <div class="article-list">
+			<!--
+			<article class="arc-item">
+                <a class="weui-media-box weui-media-box_appmsg access id-4" data-gid="4">
+                    <div class="pic"><div class="loadimg-default" style="background-image: url(/upload/20170120/55a475af09acbb17831cc1ee77753ab7.jpg);"></div></div>
+                    <div class="desc">
+                        <p class="first-item" style="font-weight:700;">本期更新</p>
+                        <p class="arc-title nowrap">#1期</p>
+                        <time>2017-01-20</time>
+                        <p class="line gray first-item"></p>
+                        <p class="arc-discription first-item">标题</p>
+                        <p class="btn-cell first-item"><span class="arc-btn">阅读</span></p>
+                        <p class="ico-cell gray"><i class="ico-tag c555"></i></p>
+                    </div>
+                </a>
+            </article>
+			-->
+			<article class="loading" style="display:none;">
+                <p class="textcenter" style="padding: 1em 0;">
+                    <i class="weui-loading"></i>
+                    <span class="middle inline-block">正在加载</span>
+                </p>
+            </article>
+        </div>
+
+    </div>
+    <div class="panel-photo"></div>
+</div>
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__bottom-bar"></div>
+
+            <div class="pswp__top-bar">
+                <p class="pswp_t_title"></p>
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <button class="pswp__button pswp__button--index" title="index in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+    <div class="pswp__bottom-index swiper-container trans-panel-v off">
+        <div class="swiper-wrapper index-pic-list"></div>
+    </div>
+</div>
+
+<script charset="utf-8" src="../js/jquery-2.2.3.min.js"></script>
+<script charset="utf-8" src="../js/global_js.js"></script>
+<script charset="utf-8" src="photoSwipe/photoswipe.min.js"></script>
+<script charset="utf-8" src="photoSwipe/photoswipe-ui-default.min.js"></script>
+<script charset="utf-8" src="../js/swiper.js"></script>
+<script>
+    //var swiper;
+    function set_cookie(name, value, expires, path, domain, secure)
+    {
+        var today = new Date();
+        today.setTime( today.getTime() );
+
+        if ( expires )
+        {
+            expires = expires * 1000 * 60 * 60 * 24;
+        }
+        var expires_date = new Date( today.getTime() + (expires) );
+
+        document.cookie = name + "=" +encodeURIComponent( value ) +
+        ( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
+        ( ( path ) ? ";path=" + path : "" ) +
+        ( ( domain ) ? ";domain=" + domain : "" ) +
+        ( ( secure ) ? ";secure" : "" );
+    }
+
+    function get_cookie(name) {
+        var start = document.cookie.indexOf(name + "=");
+        var len = start + name.length + 1;
+        if ((!start) && (name != document.cookie.substring(0, name.length )))
+        {
+            return null;
+        }
+        if (start == -1) return null;
+        var end = document.cookie.indexOf(";", len);
+        if (end == -1) end = document.cookie.length;
+        return (decodeURIComponent(document.cookie.substring(len, end)));
+    }
+
+    $(function(){
+        
+        var _json = {};
+        try{
+            _json = {
+				"a4":{
+					"id":4,
+					"title":"标题01",
+					"date":1,
+					"content":[
+						{
+							"title":"1-1",
+							"image":"image/1-1.jpg",
+							"has_link":"0"
+						},
+						{
+							"title":"1-2",
+							"image":"image/1-2.jpg",
+							"has_link":"0"
+						},
+						{
+							"title":"1-3",
+							"image":"image/1-3.jpg",
+							"has_link":"0"
+						},
+						{
+							"title":"1-4",
+							"image":"image/1-4.jpg",
+							"has_link":"0"
+						}
+					],
+					"comment_count":0,
+					"status":1,
+					"like_count":0,
+					"created_at":"01-20",
+					"link_text":"ces",
+					"link_url":"#",
+					"created_at_dis":"2017-01-20"
+				},
+				"a3":{
+					"id":3,
+					"title":"标题02",
+					"date":2444,
+					"content":[
+						{
+							"title":"2-1",
+							"image":"image/2-1.jpg",
+							"has_link":"0"
+						},
+						{
+							"title":"2-2",
+							"image":"image/2-2.jpg",
+							"has_link":"0"
+						},
+						{
+							"title":"2-3",
+							"image":"image/2-3.jpg",
+							"has_link":"0"
+						}
+					],
+					"comment_count":0,
+					"status":1,
+					"like_count":0,
+					"created_at":"01-19",
+					"link_text":"22",
+					"link_url":"22",
+					"created_at_dis":"2017-01-19",
+					"status_dis":"\u6b63\u5e38"
+				}
+			};
+        }catch(e){
+            console.log('读取数据出错！');
+        }
+
+        var arc_list = $(".article-list");
+        var pswpElement = document.querySelectorAll('.pswp')[0];
+        var pswp_title = document.querySelectorAll('.pswp .pswp_t_title')[0];
+        var pswp_index = $(".pswp__bottom-index");
+        var pwsp_index_list = pswp_index.find(".index-pic-list");
+        var pwsp_index_item;
+        var _pg;
+        var swiper;
+        var gallery;
+
+        var __cookie = get_cookie('photoswipe_pid');
+        var p_temp = __cookie?JSON.parse(__cookie):{};
+        var __cookie_arc = get_cookie('arc_came');
+        var arc_temp = __cookie_arc?JSON.parse(__cookie_arc):{};
+
+        if(arc_temp){
+            $.each(arc_temp,function(_k,_v){
+                $("[data-gid="+_k+"]").find(".ico-tag").addClass("c555");
+            });
+        }
+
+        $(".container").on("click","[data-gid]",function(){
+            var gid = $(this).attr('data-gid');
+            if(_json['a'+gid]){
+                set_cookie('arc_came',JSON.stringify(arc_temp),'60','/');
+                /* 更新经过的ID */
+
+                if(global_js._func.photoswipeParseHash().gid == gid){
+                    $(window).trigger("hashchange");
+                }else{
+                    var _str = '';
+                    //if(location.pathname.substr(-1) != '/') _str = '/';
+                    location.href = location.origin+location.pathname+_str+'#&gid='+gid+'&pid='+((p_temp[gid]==undefined || p_temp[gid]<=0)?1:p_temp[gid]);
+                }
+            }else{
+                console.log('没有此项数据 gid:'+gid);
+            }
+        });
+
+        $(".pswp__button--index").on("click",function(){
+            if(swiper) pswp_index.toggleClass("off");
+        });
+        pwsp_index_list.on("click",".index-pic-item",function(){
+            var __index = $(this).index();
+            if(gallery) gallery.goTo(__index);
+        });
+
+        window.onhashchange=function(){
+            _pg = global_js._func.photoswipeParseHash();
+            if(_pg && _pg.pid && _pg.gid){
+                if(_json['a'+_pg.gid]){
+                    if(swiper) swiper.removeAllSlides();
+                    else pwsp_index_list.html('');
+
+                    arc_temp[_pg.gid] = 1;
+                    setTimeout(function(){
+                        $("[data-gid="+_pg.gid+"]").find(".ico-tag").addClass("c555");
+                        set_cookie('arc_came',JSON.stringify(arc_temp),'60','/');
+                    },1);
+
+                    var img_list = _json['a'+_pg.gid].content;
+                    var items = [];
+                    for(var i in img_list){
+                        items.push({
+                            src: img_list[i].image,
+                            //msrc:img_list[i],
+                            w: parseInt(480),
+                            h: parseInt(800),
+                            el:[]
+                        });
+                        pwsp_index_list.append('<div class="swiper-slide index-pic-item"><p>'+img_list[i].title+'</p><img src="'+img_list[i].image+'" /></div>');
+                    }
+                    var options = {
+                        galleryUID: _pg.gid || 1,
+                        getThumbBoundsFn: function(index) {
+                            var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
+                            return {x:0,y:pageYScroll,w:0};
+                        },
+                        shareEl : false,
+                        fullscreenEl : false,
+                        isClickableElement: function(el) {
+                            return true;//el.tagName === 'IMG';
+                        },
+                        bgOpacity : 0.85,
+                        tapToClose : true,
+                        tapToToggleControls : false,
+                        clickToCloseNonZoomable: false,
+                        closeOnVerticalDrag:false,
+						closeOnScroll:false
+                        //showAnimationDuration : 0
+                    };
+
+                    pwsp_index_item = pwsp_index_list.find(".index-pic-item");
+
+                    pswp_title.innerHTML = _json['a'+_pg.gid].title;
+                    gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+                    gallery.listen('afterChange', function() {
+                        var __pid = gallery.getCurrentIndex()-0+1;
+                        _pg.pid = __pid;
+                        p_temp[_pg.gid] = __pid;
+                        setTimeout(function(){
+                            set_cookie('photoswipe_pid',JSON.stringify(p_temp),'60','/');
+                            pwsp_index_item.eq(__pid-1).addClass("on").siblings(".index-pic-item").removeClass("on");
+                            if(swiper) swiper.slideTo(__pid-1, 160, false);
+                        },1);
+                    });
+                    gallery.init();
+                    if(swiper) swiper.update();
+                }
+            }
+        };
+        $(window).trigger("hashchange");
+
+        var _url = '/handler/index/paper';
+        var sl_obj = global_js.slideLoad({main:'.article-list',url:_url,is_on:0});
+		var add_cell = function(_data){
+			var __repeat = 0;
+				for (var _ii = 0 in _data) {
+					var data_item = _data[_ii];
+					var __green = '';
+					if(data_item){
+						if(arc_temp[data_item.id] == 1) __green = 'c555';
+						_json['a'+data_item.id] = data_item;
+						if (!sl_obj.ssn_arr[data_item.id]) {
+							sl_obj.ssn_arr[data_item.id] = 1;
+							sl_obj.loading_jq.before('<article class="arc-item">'+
+							'<a class="weui-media-box weui-media-box_appmsg access id-'+data_item.id+'" data-gid="'+data_item.id+'">'+
+							'<div class="pic"><div class="loadimg-default" style="background-image: url('+data_item.content[0].image+');"></div></div>'+
+							'<div class="desc">'+
+							'<p class="first-item">本期更新</p>'+
+							'<p class="arc-title nowrap">#'+data_item.date+'期</p>'+
+							'<time>'+data_item.created_at_dis+'</time>'+
+						'<p class="line gray first-item"></p>'+
+						'<p class="arc-discription first-item">'+data_item.title+'</p>'+
+					'<p class="btn-cell first-item"><span class="arc-btn">阅读</span></p>'+
+					'<p class="ico-cell gray"><i class="ico-tag '+__green+'"></i></p>'+
+					'</div>'+
+					'</a>'+
+					'</article>');
+						} else {
+							__repeat++;
+						}
+					}else{
+						console.log("数据读取格式有误？");
+					}
+				}
+				WINDOW.trigger("resize");
+				if (sl_obj.page_index-1 >= sl_obj.page_total) {
+					/*sl_obj.nodata_text_jq.html("已经没有了！");
+					 sl_obj.nodata_jq.show();*/
+					console.log("已经是尾页了");
+					sl_obj.isend = 1;
+				} else {
+					if (__repeat >= 10) {
+						console.log("数据重复过多？");
+						/* 重复数据过多再请求下一页 */
+						sl_obj.load();
+					}
+				}
+		};
+		
+		add_cell(_json);
+		
+        sl_obj.done = function(resp){
+            //console.log(resp);
+            if (resp.err_code == 0) {
+                sl_obj.page_index = resp.data.current_page-0+1;
+                sl_obj.page_total = Math.ceil(resp.data.total/resp.data.per_page);
+				
+				add_cell(resp.data.data);
+            }
+        };
+		/*
+        global_js.loadRoute("swiper",function(){
+            swiper = new Swiper('.swiper-container', {
+                //pagination: '.swiper-pagination',
+                slidesPerView: 'auto',
+                centeredSlides: true,
+                paginationClickable: true,
+                spaceBetween: 20,
+                freeMode : true
+            });
+        });
+		*/
+		setTimeout(function(){
+			swiper = new Swiper('.swiper-container', {
+                //pagination: '.swiper-pagination',
+                slidesPerView: 'auto',
+                centeredSlides: true,
+                paginationClickable: true,
+                spaceBetween: 20,
+                freeMode : true
+            });
+		},10);
+    });
+</script>
+</body>
+</html>
